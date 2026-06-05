@@ -84,12 +84,12 @@ export const VOLUNTEERING = [
 export const PROJECTS = [
   {
     id: 1,
-    title: "Orbit Simulator",
-    desc: "N-body gravity simulation with real-time orbital rendering.",
+    title: "Volunteer Mapping of NOC-BD",
+    desc: "Interactive Colour coded map of Volunteers and Trainees all over Bangladesh.",
     tags: ["JS", "Canvas API", "Physics"],
     status: "Complete",
     github: "#",
-    demo: "#",
+    demo: "https://al1n3waj.github.io/map",
   },
   {
     id: 2,
