@@ -1,87 +1,54 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import {
   Github, Linkedin, Mail, ExternalLink, ChevronRight,
   Code2, Telescope, Atom, BookOpen, GraduationCap,
-  Award, Menu, X, Calendar, ArrowUpRight
+  Award, Menu, X, Calendar, ArrowUpRight, Heart
 } from 'lucide-react';
+
+import {
+  SITE_CONFIG,
+  SKILLS,
+  EDUCATION,
+  VOLUNTEERING,
+  PROJECTS,
+  CERTIFICATIONS,
+  BLOG_POSTS,
+} from './data';
+
+const NAV_LINKS = ['About', 'Education', 'Volunteering', 'Projects', 'Certifications', 'Blog'];
 
 /* ─── Interactive Starfield ─────────────────────────────── */
 const Starfield = () => {
   const canvasRef = useRef(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let raf;
     let stars = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initStars();
-    };
-
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initStars(); };
     const initStars = () => {
       stars = Array.from({ length: 150 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 1.5 + 0.5,
-        speed: Math.random() * 0.2 + 0.05,
-        opacity: Math.random() * 0.8 + 0.2,
-        pulse: Math.random() * Math.PI * 2,
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+        size: Math.random() * 1.5 + 0.5, speed: Math.random() * 0.2 + 0.05,
+        opacity: Math.random() * 0.8 + 0.2, pulse: Math.random() * Math.PI * 2,
       }));
     };
-
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach((s) => {
-        s.y -= s.speed;
-        s.pulse += 0.02;
+        s.y -= s.speed; s.pulse += 0.02;
         if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
-        const flicker = Math.sin(s.pulse) * 0.3 + 0.7;
-        ctx.fillStyle = `rgba(232,237,245,${s.opacity * flicker})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillStyle = `rgba(232,237,245,${s.opacity * (Math.sin(s.pulse) * 0.3 + 0.7)})`;
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill();
       });
       raf = requestAnimationFrame(animate);
     };
-
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
+    window.addEventListener('resize', resize); resize(); animate();
     return () => { window.removeEventListener('resize', resize); cancelAnimationFrame(raf); };
   }, []);
-
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
 };
-
-/* ─── Data ──────────────────────────────────────────────── */
-const NAV_LINKS = ['About', 'Education', 'Projects', 'Certifications', 'Blog'];
-
-const EDUCATION_DATA = [
-  { id: 'edu-1', type: 'education', institution: '[Your University]', title: 'BSc Physics', period: '2023 – Present', description: 'Specializing in Astrophysics & Computational Methods.', highlights: ['Quantum Mechanics', 'Stellar Dynamics', 'Data Analysis'] },
-  { id: 'res-1', type: 'research', institution: 'Astrophysics Lab', title: 'Research Assistant', period: 'Jan 2025 – Present', description: 'Modeling exoplanet atmospheres using Python simulations.', highlights: ['Python', 'Spectral Analysis', 'Technical Writing'] },
-];
-
-const PROJECTS_DATA = [
-  { id: 1, title: 'Orbit Simulator', desc: 'N-body gravity simulation with real-time orbital rendering.', tags: ['JS', 'Canvas API', 'Physics'], status: 'Complete', github: '#', demo: '#' },
-  { id: 2, title: 'Exoplanet Explorer', desc: 'NASA API dashboard for habitable zone visualization.', tags: ['React', 'Tailwind', 'REST API'], status: 'In Progress', github: '#', demo: null },
-  { id: 3, title: 'Spectra AI', desc: 'ML classifier for stellar spectral types.', tags: ['Python', 'TensorFlow', 'Pandas'], status: 'Complete', github: '#', demo: '#' },
-];
-
-const CERTIFICATIONS_DATA = [
-  { id: 1, title: 'Astrophysics 101x', platform: 'edX', date: 'Aug 2024', link: '#' },
-  { id: 2, title: 'Python for Science', platform: 'Coursera', date: 'Dec 2023', link: '#' },
-  { id: 3, title: 'Advanced React Patterns', platform: 'Frontend Masters', date: 'Feb 2025', link: '#' },
-];
-
-const BLOG_DATA = [
-  { id: 1, title: 'Black Holes: A Visual Guide', date: 'May 15, 2026', excerpt: 'Understanding event horizons through interactive simulations…', image: 'https://placehold.co/600x400/0d1526/4f9eff?text=Black+Hole' },
-  { id: 2, title: 'The Art of Vibe Coding', date: 'Apr 02, 2026', excerpt: 'Why intuition-driven development accelerates learning…', image: 'https://placehold.co/600x400/0d1526/4f9eff?text=Vibe+Coding' },
-  { id: 3, title: 'JWST: Year Three', date: 'Mar 10, 2026', excerpt: 'Analyzing the latest deep field data releases…', image: 'https://placehold.co/600x400/0d1526/4f9eff?text=JWST' },
-];
 
 /* ─── Reusable Components ───────────────────────────────── */
 const SpotlightCard = ({ children, className = '' }) => {
@@ -120,13 +87,11 @@ export default function App() {
     return () => window.removeEventListener('scroll', h);
   }, []);
 
-  const filteredCareer = EDUCATION_DATA.filter((i) => i.type === activeTab);
+  const filteredCareer = EDUCATION.filter((i) => i.type === activeTab);
 
   return (
     <div className="min-h-screen selection:bg-nebula-blue/30 relative">
       <Starfield />
-
-      {/* Scroll progress bar */}
       <motion.div style={{ scaleX: scrollYProgress }} className="fixed top-0 left-0 right-0 h-1 bg-nebula-blue origin-left z-[60] shadow-[0_0_10px_#4f9eff]" />
 
       {/* Nav */}
@@ -134,7 +99,7 @@ export default function App() {
         <div className="container mx-auto px-6 flex justify-between items-center">
           <a href="#" className="text-2xl font-bold font-display tracking-tighter text-star-white hover:text-nebula-blue transition-colors flex items-center gap-2 group">
             <Atom className="text-nebula-blue group-hover:rotate-180 transition-transform duration-700" />
-            [Your Name]<span className="text-nebula-blue">.</span>
+            {SITE_CONFIG.name}<span className="text-nebula-blue">.</span>
           </a>
           <div className="hidden md:flex items-center space-x-8">
             {NAV_LINKS.map((l) => (
@@ -142,11 +107,11 @@ export default function App() {
                 {l}<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-nebula-blue transition-all group-hover:w-full shadow-[0_0_8px_rgba(79,158,255,0.8)]" />
               </a>
             ))}
-            <a href="mailto:[your@email.com]" className="px-5 py-2 rounded-full bg-nebula-blue/10 border border-nebula-blue/30 text-sm font-medium text-nebula-blue hover:bg-nebula-blue hover:text-white transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(79,158,255,0.1)] hover:shadow-[0_0_25px_rgba(79,158,255,0.4)]">
+            <a href={`mailto:${SITE_CONFIG.email}`} className="px-5 py-2 rounded-full bg-nebula-blue/10 border border-nebula-blue/30 text-sm font-medium text-nebula-blue hover:bg-nebula-blue hover:text-white transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(79,158,255,0.1)] hover:shadow-[0_0_25px_rgba(79,158,255,0.4)]">
               <Mail size={14} /> Contact
             </a>
           </div>
-          <button className="md:hidden text-dust-grey p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button className="md:hidden text-dust-grey p-2 cursor-pointer" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
@@ -169,18 +134,16 @@ export default function App() {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="max-w-4xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-nebula-blue/5 border border-nebula-blue/20 text-nebula-blue text-xs font-medium mb-8 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-nebula-blue animate-pulse shadow-[0_0_8px_#4f9eff]" />
-              Open to Research Opportunities
+              {SITE_CONFIG.statusBadge}
             </div>
             <h1 className="text-6xl md:text-8xl font-bold font-display leading-[1.05] mb-8 text-star-white">
-              Exploring the <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-nebula-blue via-cyan-300 to-nebula-blue drop-shadow-[0_0_20px_rgba(79,158,255,0.3)]">universe one equation</span> <br />
-              at a time.
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-nebula-blue via-cyan-300 to-nebula-blue drop-shadow-[0_0_20px_rgba(79,158,255,0.3)]">
+                {SITE_CONFIG.tagline}
+              </span>
             </h1>
-            <p className="text-xl text-dust-grey max-w-2xl mb-12 leading-relaxed">
-              Physics undergrad fascinated by the cosmos. Building small coding projects at the intersection of science and software.
-            </p>
+            <p className="text-xl text-dust-grey max-w-2xl mb-12 leading-relaxed">{SITE_CONFIG.bio}</p>
             <div className="flex flex-wrap gap-4">
-              <a href="https://github.com/yourusername" target="_blank" rel="noreferrer" className="px-8 py-4 rounded-xl bg-nebula-blue text-white font-semibold shadow-[0_0_20px_rgba(79,158,255,0.4)] hover:shadow-[0_0_35px_rgba(79,158,255,0.6)] hover:-translate-y-1 transition-all flex items-center gap-2">
+              <a href={SITE_CONFIG.github} target="_blank" rel="noreferrer" className="px-8 py-4 rounded-xl bg-nebula-blue text-white font-semibold shadow-[0_0_20px_rgba(79,158,255,0.4)] hover:shadow-[0_0_35px_rgba(79,158,255,0.6)] hover:-translate-y-1 transition-all flex items-center gap-2">
                 <Github size={20} /> View GitHub
               </a>
               <button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 rounded-xl bg-space-surface border border-space-border text-star-white font-semibold hover:border-nebula-blue/50 hover:bg-space-surface/80 transition-all flex items-center gap-2 cursor-pointer">
@@ -200,7 +163,7 @@ export default function App() {
               <div className="pt-6">
                 <h4 className="text-star-white font-display font-semibold mb-4 flex items-center gap-2 text-xl"><Code2 size={20} className="text-nebula-blue" /> Technical Toolkit</h4>
                 <div className="flex flex-wrap gap-3">
-                  {['Python', 'NumPy', 'Matplotlib', 'React', 'JavaScript', 'Git', 'LaTeX'].map((s) => (
+                  {SKILLS.map((s) => (
                     <span key={s} className="px-4 py-2 bg-space-surface border border-space-border hover:border-nebula-blue/50 hover:text-nebula-blue rounded-lg text-sm transition-all cursor-default">{s}</span>
                   ))}
                 </div>
@@ -209,7 +172,7 @@ export default function App() {
             <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative flex justify-center">
               <div className="relative w-80 h-80 md:w-[28rem] md:h-[28rem]">
                 <div className="absolute inset-0 bg-nebula-blue rounded-full blur-[100px] opacity-20 animate-pulse" />
-                <img src="https://placehold.co/600x600/0d1526/e8edf5?text=Profile" alt="Profile" className="relative w-full h-full object-cover rounded-full border-4 border-space-void shadow-[0_0_50px_rgba(79,158,255,0.15)]" />
+                <img src={SITE_CONFIG.profileImage} alt="Profile" className="relative w-full h-full object-cover rounded-full border-4 border-space-void shadow-[0_0_50px_rgba(79,158,255,0.15)]" />
                 <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} className="absolute -right-8 top-16 bg-space-surface/90 backdrop-blur-xl p-5 rounded-2xl border border-space-border shadow-2xl flex items-center gap-4">
                   <Telescope size={28} className="text-nebula-blue" />
                   <div><div className="text-xs text-dust-grey uppercase tracking-wider">Passion</div><div className="font-bold text-star-white text-lg">Astrophile</div></div>
@@ -263,74 +226,107 @@ export default function App() {
           </div>
         </section>
 
-        {/* Projects */}
-        <section id="projects" className="py-32 container mx-auto px-6">
-          <SectionHeading subtitle="Coding projects exploring physics and astronomy.">Vibe Coding Projects</SectionHeading>
+        {/* Volunteering */}
+        <section id="volunteering" className="py-32 container mx-auto px-6">
+          <SectionHeading subtitle="Giving back to the community through science outreach and mentorship.">Volunteering</SectionHeading>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PROJECTS_DATA.map((p) => (
-              <SpotlightCard key={p.id} className="p-8 flex flex-col h-full hover:border-nebula-blue/40 hover:shadow-[0_10px_40px_-10px_rgba(79,158,255,0.15)] transition-all duration-300 group">
-                <div className="flex justify-between items-start mb-6 relative z-10">
-                  <div className="p-3 bg-space-border/50 rounded-xl text-nebula-blue group-hover:text-white group-hover:bg-nebula-blue transition-all duration-300"><Code2 size={24} /></div>
-                  <span className={`text-xs px-3 py-1 rounded-full border font-medium ${p.status === 'Complete' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-900/10' : 'border-amber-500/30 text-amber-400 bg-amber-900/10'}`}>{p.status}</span>
+            {VOLUNTEERING.map((vol) => (
+              <SpotlightCard key={vol.id} className="p-8 flex flex-col h-full hover:border-nebula-blue/40 transition-all duration-300 group">
+                <div className="flex items-center gap-3 mb-4 relative z-10">
+                  <div className="p-3 bg-space-border/50 rounded-xl text-nebula-blue group-hover:text-white group-hover:bg-nebula-blue transition-all duration-300">
+                    <Heart size={24} />
+                  </div>
+                  <span className="text-xs font-mono text-nebula-blue bg-nebula-blue/10 px-3 py-1 rounded-full border border-nebula-blue/20 whitespace-nowrap">
+                    {vol.period}
+                  </span>
                 </div>
-                <h3 className="text-2xl font-display font-bold text-star-white mb-3 group-hover:text-nebula-blue transition-colors relative z-10">{p.title}</h3>
-                <p className="text-dust-grey mb-8 flex-grow relative z-10 leading-relaxed">{p.desc}</p>
-                <div className="mb-8 flex flex-wrap gap-2 relative z-10">
-                  {p.tags.map((t) => <span key={t} className="text-xs text-dust-grey bg-space-void px-3 py-1 rounded-md border border-space-border">#{t}</span>)}
-                </div>
-                <div className="flex gap-4 mt-auto relative z-10">
-                  <a href={p.github} className="flex-1 flex items-center justify-center gap-2 bg-space-border hover:bg-space-border/80 text-star-white text-sm py-3 rounded-xl transition-colors font-medium"><Github size={18} /> Code</a>
-                  {p.demo && <a href={p.demo} className="flex-1 flex items-center justify-center gap-2 bg-nebula-blue hover:bg-nebula-blue/90 text-white text-sm py-3 rounded-xl transition-colors font-medium shadow-[0_0_20px_rgba(79,158,255,0.3)]"><ExternalLink size={18} /> Demo</a>}
-                </div>
+                <h3 className="text-xl font-display font-bold text-star-white mb-1 relative z-10">{vol.role}</h3>
+                <div className="text-cyan-400 font-medium mb-4 relative z-10">{vol.organization}</div>
+                <p className="text-dust-grey mb-6 flex-grow relative z-10 leading-relaxed">{vol.description}</p>
+                {vol.highlights && (
+                  <ul className="space-y-2 relative z-10">
+                    {vol.highlights.map((h, i) => (
+                      <li key={i} className="text-sm text-dust-grey flex items-center gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-nebula-blue shadow-[0_0_5px_#4f9eff]" />{h}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </SpotlightCard>
             ))}
           </div>
         </section>
 
-        {/* Certifications */}
-        <section id="certifications" className="py-32 bg-space-surface/30 backdrop-blur-sm">
+        {/* Projects */}
+        <section id="projects" className="py-32 bg-space-surface/30 backdrop-blur-sm">
           <div className="container mx-auto px-6">
-            <SectionHeading>Certifications</SectionHeading>
-            <div className="grid md:grid-cols-3 gap-6">
-              {CERTIFICATIONS_DATA.map((c) => (
-                <a key={c.id} href={c.link} target="_blank" rel="noreferrer">
-                  <SpotlightCard className="p-6 h-full hover:border-nebula-blue/40 transition-all group cursor-pointer">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-nebula-blue/10 rounded-xl text-nebula-blue group-hover:scale-110 transition-transform"><Award size={24} /></div>
-                      <div><h4 className="font-display font-bold text-star-white line-clamp-1 text-lg">{c.title}</h4><p className="text-sm text-dust-grey font-medium">{c.platform}</p></div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-dust-grey border-t border-space-border/50 pt-4 mt-2">
-                      <span className="flex items-center gap-2"><Calendar size={14} /> {c.date}</span>
-                      <span className="text-nebula-blue flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">View <ArrowUpRight size={14} /></span>
-                    </div>
-                  </SpotlightCard>
-                </a>
+            <SectionHeading subtitle="Coding projects exploring physics and astronomy.">Vibe Coding Projects</SectionHeading>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {PROJECTS.map((p) => (
+                <SpotlightCard key={p.id} className="p-8 flex flex-col h-full hover:border-nebula-blue/40 hover:shadow-[0_10px_40px_-10px_rgba(79,158,255,0.15)] transition-all duration-300 group">
+                  <div className="flex justify-between items-start mb-6 relative z-10">
+                    <div className="p-3 bg-space-border/50 rounded-xl text-nebula-blue group-hover:text-white group-hover:bg-nebula-blue transition-all duration-300"><Code2 size={24} /></div>
+                    <span className={`text-xs px-3 py-1 rounded-full border font-medium ${p.status === 'Complete' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-900/10' : 'border-amber-500/30 text-amber-400 bg-amber-900/10'}`}>{p.status}</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-star-white mb-3 group-hover:text-nebula-blue transition-colors relative z-10">{p.title}</h3>
+                  <p className="text-dust-grey mb-8 flex-grow relative z-10 leading-relaxed">{p.desc}</p>
+                  <div className="mb-8 flex flex-wrap gap-2 relative z-10">
+                    {p.tags.map((t) => <span key={t} className="text-xs text-dust-grey bg-space-void px-3 py-1 rounded-md border border-space-border">#{t}</span>)}
+                  </div>
+                  <div className="flex gap-4 mt-auto relative z-10">
+                    <a href={p.github} className="flex-1 flex items-center justify-center gap-2 bg-space-border hover:bg-space-border/80 text-star-white text-sm py-3 rounded-xl transition-colors font-medium"><Github size={18} /> Code</a>
+                    {p.demo && <a href={p.demo} className="flex-1 flex items-center justify-center gap-2 bg-nebula-blue hover:bg-nebula-blue/90 text-white text-sm py-3 rounded-xl transition-colors font-medium shadow-[0_0_20px_rgba(79,158,255,0.3)]"><ExternalLink size={18} /> Demo</a>}
+                  </div>
+                </SpotlightCard>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Blog */}
-        <section id="blog" className="py-32 container mx-auto px-6">
-          <div className="flex justify-between items-end mb-16">
-            <SectionHeading>Latest Thoughts</SectionHeading>
-            <button className="hidden md:inline-flex mb-16 text-nebula-blue hover:text-cyan-300 font-medium transition-colors cursor-pointer">View all posts &rarr;</button>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {BLOG_DATA.map((post) => (
-              <SpotlightCard key={post.id} className="overflow-hidden hover:border-nebula-blue/40 transition-all group cursor-pointer">
-                <div className="overflow-hidden h-52 relative">
-                  <div className="absolute inset-0 bg-nebula-blue/10 group-hover:bg-transparent transition-colors z-10" />
-                  <img src={post.image} alt={post.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
-                </div>
-                <div className="p-6">
-                  <div className="text-xs text-nebula-blue mb-3 font-mono">{post.date}</div>
-                  <h3 className="text-xl font-display font-bold text-star-white mb-3 group-hover:text-nebula-blue transition-colors leading-tight">{post.title}</h3>
-                  <p className="text-dust-grey text-sm line-clamp-2 mb-4 leading-relaxed">{post.excerpt}</p>
-                  <span className="inline-flex items-center text-sm font-medium text-star-white group-hover:text-nebula-blue transition-colors">Read article <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" /></span>
-                </div>
-              </SpotlightCard>
+        {/* Certifications */}
+        <section id="certifications" className="py-32 container mx-auto px-6">
+          <SectionHeading>Certifications</SectionHeading>
+          <div className="grid md:grid-cols-3 gap-6">
+            {CERTIFICATIONS.map((c) => (
+              <a key={c.id} href={c.link} target="_blank" rel="noreferrer">
+                <SpotlightCard className="p-6 h-full hover:border-nebula-blue/40 transition-all group cursor-pointer">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-nebula-blue/10 rounded-xl text-nebula-blue group-hover:scale-110 transition-transform"><Award size={24} /></div>
+                    <div><h4 className="font-display font-bold text-star-white line-clamp-1 text-lg">{c.title}</h4><p className="text-sm text-dust-grey font-medium">{c.platform}</p></div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm text-dust-grey border-t border-space-border/50 pt-4 mt-2">
+                    <span className="flex items-center gap-2"><Calendar size={14} /> {c.date}</span>
+                    <span className="text-nebula-blue flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">View <ArrowUpRight size={14} /></span>
+                  </div>
+                </SpotlightCard>
+              </a>
             ))}
+          </div>
+        </section>
+
+        {/* Blog */}
+        <section id="blog" className="py-32 bg-space-surface/30 backdrop-blur-sm">
+          <div className="container mx-auto px-6">
+            <div className="flex justify-between items-end mb-16">
+              <SectionHeading>Latest Thoughts</SectionHeading>
+              <button className="hidden md:inline-flex mb-16 text-nebula-blue hover:text-cyan-300 font-medium transition-colors cursor-pointer">View all posts &rarr;</button>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {BLOG_POSTS.map((post) => (
+                <SpotlightCard key={post.id} className="overflow-hidden hover:border-nebula-blue/40 transition-all group cursor-pointer">
+                  <div className="overflow-hidden h-52 relative">
+                    <div className="absolute inset-0 bg-nebula-blue/10 group-hover:bg-transparent transition-colors z-10" />
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                  </div>
+                  <div className="p-6">
+                    <div className="text-xs text-nebula-blue mb-3 font-mono">{post.date}</div>
+                    <h3 className="text-xl font-display font-bold text-star-white mb-3 group-hover:text-nebula-blue transition-colors leading-tight">{post.title}</h3>
+                    <p className="text-dust-grey text-sm line-clamp-2 mb-4 leading-relaxed">{post.excerpt}</p>
+                    <span className="inline-flex items-center text-sm font-medium text-star-white group-hover:text-nebula-blue transition-colors">Read article <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" /></span>
+                  </div>
+                </SpotlightCard>
+              ))}
+            </div>
           </div>
         </section>
       </main>
@@ -341,13 +337,13 @@ export default function App() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold font-display text-star-white mb-2 flex items-center justify-center md:justify-start gap-2"><Atom className="text-nebula-blue" size={24} /> [Your Name]</h2>
+              <h2 className="text-2xl font-bold font-display text-star-white mb-2 flex items-center justify-center md:justify-start gap-2"><Atom className="text-nebula-blue" size={24} /> {SITE_CONFIG.name}</h2>
               <p className="text-dust-grey text-sm">© {new Date().getFullYear()} • Built with React &amp; Tailwind</p>
             </div>
             <div className="flex gap-4 bg-space-surface/50 p-2 rounded-full border border-space-border">
-              {[Github, Linkedin, Mail].map((Icon, i) => (
-                <a key={i} href="#" className="p-3 text-dust-grey hover:text-white hover:bg-nebula-blue rounded-full transition-all"><Icon size={20} /></a>
-              ))}
+              <a href={SITE_CONFIG.github} target="_blank" rel="noreferrer" className="p-3 text-dust-grey hover:text-white hover:bg-nebula-blue rounded-full transition-all"><Github size={20} /></a>
+              <a href={SITE_CONFIG.linkedin} target="_blank" rel="noreferrer" className="p-3 text-dust-grey hover:text-white hover:bg-nebula-blue rounded-full transition-all"><Linkedin size={20} /></a>
+              <a href={`mailto:${SITE_CONFIG.email}`} className="p-3 text-dust-grey hover:text-white hover:bg-nebula-blue rounded-full transition-all"><Mail size={20} /></a>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-dust-grey font-medium">
               {NAV_LINKS.map((l) => <a key={l} href={`#${l.toLowerCase()}`} className="hover:text-nebula-blue transition-colors">{l}</a>)}
