@@ -3,15 +3,15 @@
 // ============================================
 
 export const SITE_CONFIG = {
-  name: "[Your Name]",
-  email: "[your@email.com]",
-  github: "https://github.com/yourusername",
-  linkedin: "https://linkedin.com/in/yourusername",
+  name: "Ali Newaj",
+  email: "alinewajcu@gmail.com",
+  github: "https://github.com/AL1N3WAJ",
+  linkedin: "https://linkedin.com/in/alinewaj",
   tagline: "Exploring the universe one equation at a time.",
-  bio: "Physics undergrad fascinated by the cosmos — from stellar evolution to dark matter. When I'm not studying, I build small coding projects at the intersection of science and software.",
+  bio: "Physics undergrad fascinated by the cosmos, from stellar evolution to dark matter. When I'm not studying, I build small coding projects at the intersection of science and software.",
   statusBadge: "Open to Research Opportunities",
   // ⬇️ REPLACE THIS URL WITH YOUR ACTUAL PROFILE PHOTO
-  profileImage: "https://placehold.co/600x600/0d1526/e8edf5?text=Profile",
+  profileImage: "/profile.jpg",,
 };
 
 export const SKILLS = [
@@ -28,7 +28,7 @@ export const EDUCATION = [
   {
     id: "edu-1",
     type: "education",
-    institution: "[Your University]",
+    institution: "University of Chittagong",
     title: "BSc Physics",
     period: "2023 – Present",
     description: "Specializing in Astrophysics & Computational Methods. Dean's List 2024.",
@@ -37,11 +37,11 @@ export const EDUCATION = [
   {
     id: "edu-2",
     type: "education",
-    institution: "[Previous Institution / Community College]",
-    title: "Associate Degree in Mathematics",
-    period: "2021 – 2023",
-    description: "Graduated with honors. Founded the campus STEM tutoring program.",
-    highlights: ["Calculus III", "Linear Algebra", "Differential Equations"],
+    institution: "Govt. Haji Mohammad Mohsin College",
+    title: "Higher Secondary Certificate",
+    period: "2020 – 2022",
+    description: "Passed with GPA 5.",
+    highlights: ["STEM"],
   },
   {
     id: "res-1",
