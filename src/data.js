@@ -98,7 +98,7 @@ export const PROJECTS = [
     tags: ["React", "Tailwind", "REST API"],
     status: "Complete",
     github: "#",
-    demo: "al1n3waj.github.io/Astronomy-Books",
+    demo: "https://al1n3waj.github.io/Astronomy-Books",
   },
   {
     id: 3,
