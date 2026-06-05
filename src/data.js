@@ -11,7 +11,7 @@ export const SITE_CONFIG = {
   bio: "Physics undergrad fascinated by the cosmos, from stellar evolution to dark matter. When I'm not studying, I build small coding projects at the intersection of science and software.",
   statusBadge: "Open to Research Opportunities",
   // ⬇️ REPLACE THIS URL WITH YOUR ACTUAL PROFILE PHOTO
-  profileImage: "/profile.jpg",,
+  profileImage: "/profile.jpg",
 };
 
 export const SKILLS = [
