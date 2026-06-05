@@ -175,11 +175,11 @@ export default function App() {
                 <img src={SITE_CONFIG.profileImage} alt="Profile" className="relative w-full h-full object-cover rounded-full border-4 border-space-void shadow-[0_0_50px_rgba(79,158,255,0.15)]" />
                 <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} className="absolute -right-8 top-16 bg-space-surface/90 backdrop-blur-xl p-5 rounded-2xl border border-space-border shadow-2xl flex items-center gap-4">
                   <Telescope size={28} className="text-nebula-blue" />
-                  <div><div className="text-xs text-dust-grey uppercase tracking-wider">Passion</div><div className="font-bold text-star-white text-lg">Astrophile</div></div>
+                  <div><div className="text-xs text-dust-grey uppercase tracking-wider">Passion</div><div className="font-bold text-star-white text-lg">Astronomy</div></div>
                 </motion.div>
                 <motion.div animate={{ y: [0, 15, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute -left-8 bottom-16 bg-space-surface/90 backdrop-blur-xl p-5 rounded-2xl border border-space-border shadow-2xl flex items-center gap-4">
                   <Atom size={28} className="text-cyan-400" />
-                  <div><div className="text-xs text-dust-grey uppercase tracking-wider">Major</div><div className="font-bold text-star-white text-lg">Physicist</div></div>
+                  <div><div className="text-xs text-dust-grey uppercase tracking-wider">Major</div><div className="font-bold text-star-white text-lg">Physics</div></div>
                 </motion.div>
               </div>
             </motion.div>
