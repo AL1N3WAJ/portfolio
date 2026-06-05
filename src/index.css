@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-void: #050b18;
+  --color-space-surface: #0d1526;
+  --color-space-border: #1c2a45;
+  --color-nebula-blue: #4f9eff;
+  --color-star-white: #e8edf5;
+  --color-dust-grey: #8899aa;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-space-void);
+    color: var(--color-star-white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-space-void); }
+  ::-webkit-scrollbar-thumb { background: var(--color-space-border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-nebula-blue); }
+}
+
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y, -100%);
+  left: var(--mouse-x, -100%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(79, 158, 255, 0.15) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
