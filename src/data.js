@@ -93,12 +93,12 @@ export const PROJECTS = [
   },
   {
     id: 2,
-    title: "Exoplanet Explorer",
-    desc: "NASA API dashboard for habitable zone visualization.",
+    title: "Astronomy Book List",
+    desc: "A curated reading path through the cosmos. Astronomy Hub is a clean, responsive, and interactive web application that helps astronomy enthusiasts find books categorized by difficulty levels and specific topics.",
     tags: ["React", "Tailwind", "REST API"],
-    status: "In Progress",
+    status: "Complete",
     github: "#",
-    demo: null,
+    demo: "al1n3waj.github.io/Astronomy-Books",
   },
   {
     id: 3,
