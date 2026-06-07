@@ -60,11 +60,11 @@ cosmos-portfolio/
 4.  Import `cosmos-portfolio` → Framework preset auto-detects **Vite**
 5.  Click **Deploy** → Live in ~30 seconds
 
-### Custom Domain Setup (`alinewaj.pro.bd`)
+### Custom Domain Setup (`Your Custom Domain`)
 
 #### Step 1: Add Domain in Vercel
 1.  Vercel Dashboard → Project → **Settings** → **Domains**
-2.  Enter `alinewaj.pro.bd` → Click **Add**
+2.  Enter `Your Custom Domain` → Click **Add**
 3.  Copy the TXT verification record value provided
 
 #### Step 2: Configure DNS Records
